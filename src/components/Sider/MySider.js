@@ -4,8 +4,9 @@ import "./MySider.less"
 import { Link } from "react-router-dom"
 
 import arrayToTree from "array-to-tree"
-import axios from "axios"
-import NProgress from "nprogress"
+// import axios from "axios"
+import { getMenuList } from "../../apis/api"
+// import NProgress from "nprogress"
 
 import {
 	// 	// 	AppstoreOutlined,
@@ -14,8 +15,10 @@ import {
 	// 	// 	DesktopOutlined,
 	ContainerOutlined,
 	MailOutlined,
+	FieldBinaryOutlined,
 } from "@ant-design/icons"
 
+import { react } from "react.eval"
 const { SubMenu } = Menu
 
 class MySider extends React.Component {
@@ -25,7 +28,10 @@ class MySider extends React.Component {
 		collapsed: false,
 		list: [],
 	}
-
+	constructor(props) {
+		super(props)
+		react.init(this)
+	}
 	changeMode = (value) => {
 		this.setState({
 			mode: value ? "vertical" : "inline",
@@ -38,7 +44,10 @@ class MySider extends React.Component {
 		})
 	}
 
-	matchMap = new Map([["<PlusOutlined />", <PlusOutlined />]])
+	matchMap = new Map([
+		["<PlusOutlined />", <PlusOutlined />],
+		["<FieldBinaryOutlined />", <FieldBinaryOutlined />],
+	])
 
 	onOpenChange = (openKeys) => {
 		const latestOpenKey = openKeys.find(
@@ -54,11 +63,7 @@ class MySider extends React.Component {
 	}
 
 	bindClick = (e) => {
-		console.log(e.key)
-		axios({ url: `http://192.168.0.57:3000/v2/code/${e.key}` }).then((res) => {
-			// console.log(res)
-			this.setState({})
-		})
+		react("MyCode.getCode", e.key)
 	}
 
 	menuList = (obj) => {
@@ -131,19 +136,16 @@ class MySider extends React.Component {
 		})
 	}
 
-	componentDidMount() {
-		NProgress.start()
-		axios({
-			url: "http://192.168.0.57:3000/api/a/data/getMenuList",
+	getMenuList = () => {
+		getMenuList().then((res) => {
+			this.setState({
+				list: this.arrayToTree(res.data.data),
+			})
 		})
-			.then((res) => {
-				this.setState({
-					list: this.arrayToTree(res.data.data),
-				})
-			})
-			.finally(() => {
-				NProgress.done(true)
-			})
+	}
+
+	componentDidMount() {
+		this.getMenuList()
 	}
 }
 
