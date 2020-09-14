@@ -2,7 +2,6 @@ import React from 'react'
 import Sider from './components/Sider/MySider'
 import Scrollbars from 'react-custom-scrollbars'
 import { BrowserRouter as Router, Route } from 'react-router-dom'
-// import { CookiesProvider } from 'react-cookie'
 
 import MyHeader from './components/header/header'
 import MyTable from './components/table/MyTable'
@@ -12,16 +11,7 @@ import MyDescriptions from './components/descriptions/MyDescriptions'
 import PageList from './views/list/index'
 import PageLogin from './views/user/index'
 
-import store from './store/store'
-import { countAddAction } from './store/actions/counter_action'
-import { loadPostsAction } from './store/actions/post_action'
-
 import './App.less'
-
-// import { wrapContext } from './context'
-
-store.dispatch(countAddAction)
-store.dispatch(loadPostsAction)
 
 function App() {
   let renderThumb = ({ style = {}, ...props }) => {
