@@ -1,86 +1,115 @@
-import React from 'react'
-import Highlight from 'react-highlight'
+import React, { useState, useEffect } from "react"
+import Highlight from "react-highlight"
 // import './index.less'
-import { Button, message, Divider, Avatar, Empty } from 'antd'
-import { CopyOutlined } from '@ant-design/icons'
+import { Button, message, Divider, Avatar, Empty, List } from "antd"
+import { CopyOutlined } from "@ant-design/icons"
 
-import copy from 'copy-to-clipboard'
+import copy from "copy-to-clipboard"
 
-import { react } from 'react.eval'
-import { getCode, getGitHubList } from '../../apis/api'
-import MyList from './github-list'
+import { react } from "react.eval"
+import { getCode, getGitHubList } from "../../apis/api"
+import MyList from "./github-list"
 
-// console.log(Form.useForm())
-function CodeList(props) {
-  const init = () => {
-    // getCode(props.id).then((res) => {
-    //   if (res.data.data) {
-    //     this.setState({
-    //       content: res.data.data,
-    //       language: res.data.other[0].type,
-    //     })
-    //   }
-    // })
-  }
-  //   state = {
-  //     language: 'javascript',
-  //     content: '',
-  //     type: 'type',
-  //     imgUrl: '',
-  //     list: [], // github列表参数
-  //   }
+function CodeList() {
+	let [listData, setListData] = useState([])
 
-  //   constructor(props) {
-  //     super(props)
-  //     react.init(this)
-  //   }
-  //   copyInput = React.createRef()
+	useEffect(function afterRender() {
+		getCode(20).then((res) => {
+			if (res.data.data) {
+				console.log(res)
+				setListData([
+					{
+						content: res.data.data,
+						title: res.data.other[0].name,
+						language: res.data.other[0].type,
+					},
+				])
+			}
+		})
+	}, [])
 
-  //   copy = () => {
-  //     // 粘贴输入框中的内容
-  //     copy(this.state.content)
-  //     message.success('复制成功，如果失败，请在输入框内手动复制.')
-  //   }
+	let copyInput = React.createRef()
+	//   state = {
+	//     language: 'javascript',
+	//     content: '',
+	//     type: 'type',
+	//     imgUrl: '',
+	//     list: [], // github列表参数
+	//   }
 
-  //   render() {
+	//   constructor(props) {
+	//     super(props)
+	//     react.init(this)
+	//   }
 
-  // getCode = (id) => {
-  // getCode(id).then((res) => {
-  //   if (res.data.data) {
-  //     this.setState({
-  //       content: res.data.data,
-  //       language: res.data.other[0].type,
-  //     })
-  //   }
+	//   copy = () => {
+	//     // 粘贴输入框中的内容
+	//     copy(this.state.content)
+	//     message.success('复制成功，如果失败，请在输入框内手动复制.')
+	//   }
 
-  //   if (res.data.type === 'img') {
-  //     console.log(res.data.imgUrl)
-  //     this.setState({
-  //       content: res.data.imgUrl,
-  //       imgUrl: res.data.imgUrl,
-  //       language: 'img',
-  //     })
-  //   }
-  // })
-  //   }
+	//   render() {
 
-  //   getList = () => {
-  // getGitHubList().then((res) => {
-  //   console.log(res)
-  //   this.setState({
-  //     list: res.data.items,
-  //   })
-  // })
-  //   }
+	// getCode = (id) => {
+	// getCode(id).then((res) => {
+	//   if (res.data.data) {
+	//     this.setState({
+	//       content: res.data.data,
+	//       language: res.data.other[0].type,
+	//     })
+	//   }
 
-  //   componentDidMount() {
-  // this.getCode()
-  // this.getList()
-  //   }
-  init()
-  return (
-    <div className="app-code">
-      {/* {!!this.state.content ? (
+	//   if (res.data.type === 'img') {
+	//     console.log(res.data.imgUrl)
+	//     this.setState({
+	//       content: res.data.imgUrl,
+	//       imgUrl: res.data.imgUrl,
+	//       language: 'img',
+	//     })
+	//   }
+	// })
+	//   }
+
+	//   getList = () => {
+	// getGitHubList().then((res) => {
+	//   console.log(res)
+	//   this.setState({
+	//     list: res.data.items,
+	//   })
+	// })
+	//   }
+
+	//   componentDidMount() {
+	// this.getCode()
+	// this.getList()
+	//   }
+	return (
+		<div className="app-code">
+			<List
+				itemLayout="vertical"
+				size="large"
+				pagination={{
+					onChange: (page) => {
+						console.log(page)
+					},
+					pageSize: 2,
+				}}
+				dataSource={listData}
+				renderItem={(item) => (
+					<List.Item key={item.title}>
+						<List.Item.Meta
+							avatar={<Avatar src={item.avatar} />}
+							title={<a href={item.href}>{item.title}</a>}
+							description={item.description}
+						/>
+						<Highlight className={item.language} ref={copyInput}>
+							{item.content}
+						</Highlight>
+					</List.Item>
+				)}
+			/>
+
+			{/* {!!this.state.content ? (
           <div>
             <div className="code-controls-box">
               <Avatar
@@ -113,7 +142,6 @@ function CodeList(props) {
           </div>
         ) : (
           <div>
-            <MyList list={this.state.list} />
             <Empty
               image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
               imageStyle={{
@@ -136,9 +164,9 @@ function CodeList(props) {
             </Empty>
           </div>
         )} */}
-    </div>
-  )
-  //   }
+		</div>
+	)
+	//   }
 }
 
 export default CodeList
