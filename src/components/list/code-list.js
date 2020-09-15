@@ -6,7 +6,7 @@ import { CopyOutlined } from "@ant-design/icons"
 
 import copy from "copy-to-clipboard"
 
-import { react } from "react.eval"
+// import { react } from "react.eval"
 import { getCode, getGitHubList } from "../../apis/api"
 import MyList from "./github-list"
 
@@ -156,7 +156,7 @@ function CodeList() {
               <Button
                 type="primary"
                 onClick={() => {
-                  react.eval('myHeader.setModal2Visible', true)
+                  // react.eval('myHeader.setModal2Visible', true)
                 }}
               >
                 Create Now

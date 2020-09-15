@@ -1,6 +1,6 @@
 import React from "react"
 
-import { react } from "react.eval"
+// import { react } from "react.eval"
 import cookie from "react-cookies"
 
 // import { githubLogin } from '../../apis/api'
@@ -66,11 +66,6 @@ class MyHeader extends React.Component {
 
 		searchKey: "react",
 	}
-	constructor(props) {
-		super(props)
-		react.init(this)
-	}
-
 	setModal2Visible = (modal2Visible) => {
 		this.setState({ modal2Visible })
 	}
@@ -83,7 +78,7 @@ class MyHeader extends React.Component {
 		}).then((res) => {
 			this.setModal2Visible(false)
 			message.success("复制成功，如果失败，请在输入框内手动复制.")
-			react.eval("MySider.getMenuList")
+			// react.eval("MySider.getMenuList")
 		})
 	}
 
@@ -136,7 +131,7 @@ class MyHeader extends React.Component {
 
 	bindSearchFn = (e) => {
 		console.log(1)
-		react.eval("MyList.change")
+		// react.eval("MyList.change")
 	}
 
 	menu2 = (value) => {

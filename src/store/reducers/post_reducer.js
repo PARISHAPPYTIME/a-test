@@ -1,12 +1,7 @@
-const postReducer = (state = { list: [] }, action) => {
-	switch (action.type) {
-		case "LOAD_POST":
-			return {
-				...state,
-				list: action.payload,
-			}
-		default:
-			return state
+const postReducer = (state = [], action) => {
+	state = action.payload
+	return {
+		...state,
 	}
 }
 

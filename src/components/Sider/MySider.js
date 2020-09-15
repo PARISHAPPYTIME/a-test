@@ -18,7 +18,7 @@ import {
 	FieldBinaryOutlined,
 } from "@ant-design/icons"
 
-import { react } from "react.eval"
+// import { react } from "react.eval"
 const { SubMenu } = Menu
 
 class MySider extends React.Component {
@@ -27,10 +27,6 @@ class MySider extends React.Component {
 		theme: "light",
 		collapsed: false,
 		list: [],
-	}
-	constructor(props) {
-		super(props)
-		react.init(this)
 	}
 	changeMode = (value) => {
 		this.setState({
@@ -63,7 +59,7 @@ class MySider extends React.Component {
 	}
 
 	bindClick = (e) => {
-		react("MyCode.getCode", e.key)
+		// react("MyCode.getCode", e.key)
 	}
 
 	menuList = (obj) => {
