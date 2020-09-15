@@ -1,14 +1,18 @@
 import React from "react"
 // import { ref } from 'react.eval'
 
-import GitHubList from "../components/list/github-list"
+// import GitHubList from "../../components/list/github-list"
 // import CodeList from "../../components/list/code-list"
+import "./list.less"
 
-// import { Input, Radio } from "antd"
+import { Input, Radio, Button } from "antd"
 
-// import { connect } from "react-redux"
+import { connect } from "react-redux"
 
-// import { loadPostsAction } from "../store/actions/post_action"
+import {
+	reqGetCodeListAction,
+	reqGetCodeAction,
+} from "../../store/actions/actions"
 
 // const matchMap = [
 //   ['github', GitHubList],
@@ -24,29 +28,49 @@ class PageList extends React.Component {
 	//   return item[0] === type
 	// })[1]
 	// fn = (<div>qweqwe</div>)
+
+	componentDidMount() {
+		console.log(1)
+		this.props.dispatch(reqGetCodeListAction())
+		// this.props.dispatch(reqGetCodeListAction())
+	}
+
+	showPop = (e) => {
+		this.props.dispatch(reqGetCodeAction(e.id))
+	}
+
 	render() {
 		console.log(this.props)
 		return (
-			<div>
-				{/* <wrapContext.Consumer> */}
-				{/* {(value) => <span>{value.fn()}</span>} */}
-				{/* </wrapContext.Consumer> */}
-				{/* <wrapContext.Consumer> */}
-				{/* <div> */}
-				<GitHubList />
-				{/* </div> */}
-				{/* <div> {(value) => <span>{value}</span>}</div> */}
-				{/* </wrapContext.Consumer> */}
+			<div className="app-list">
+				{/* <GitHubList /> */}
+				{/* <CodeList /> */}
+				{this.props.list.map((item) => {
+					return (
+						<Button
+							onClick={() => {
+								this.showPop(item)
+							}}
+							key={item.id}
+							type={item.type}
+							shape="round"
+							type="primary"
+						>
+							{item.name}
+						</Button>
+					)
+				})}
 			</div>
 		)
 	}
 }
 
-// const mapStateToProps = (state) => {
-// 	return {
-// 		list: state,
-// 	}
-// }
+const mapStateToProps = (state) => {
+	console.log("state", state)
+	return {
+		list: state.post.list,
+	}
+}
 
 // const mapDispatchToProps = (dispatch, ownProps) => {
 // 	return {
@@ -54,7 +78,7 @@ class PageList extends React.Component {
 // 	}
 // }
 
-export default PageList
+export default connect(mapStateToProps)(PageList)
 // function RadioGroup() {
 //   console.log('犯法迪奥itong')
 //   return (

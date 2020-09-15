@@ -1,7 +1,7 @@
 import request from "../utils/request"
 
 export function getCode(itemId) {
-	let defaultReqUrl = `/v2/code/${itemId ? itemId : 2}`
+	let defaultReqUrl = `/v2/code/${itemId ? itemId : 20}`
 	return request({ url: defaultReqUrl })
 }
 
@@ -10,8 +10,15 @@ export function uploadFile(params) {
 	return request.post(defaultReqUrl, params)
 }
 
+// 获取导航的内容列表
 export function getMenuList() {
 	let defaultReqUrl = `/api/a/data/getMenuList`
+	return request({ url: defaultReqUrl })
+}
+
+// 获取代码组的内容列表
+export function getCodeList() {
+	let defaultReqUrl = `/api/a/data/getCodeList`
 	return request({ url: defaultReqUrl })
 }
 

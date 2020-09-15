@@ -1,9 +1,8 @@
 import React from "react"
-
-// import { react } from "react.eval"
 import cookie from "react-cookies"
+import { connect } from "react-redux"
 
-// import { githubLogin } from '../../apis/api'
+import { reqGetGitHubListAction } from "../../store/actions/actions"
 
 import {
 	Button,
@@ -130,7 +129,8 @@ class MyHeader extends React.Component {
 	)
 
 	bindSearchFn = (e) => {
-		console.log(1)
+		this.props.dispatch(reqGetGitHubListAction)
+		// console.log(1)
 		// react.eval("MyList.change")
 	}
 
@@ -167,8 +167,8 @@ class MyHeader extends React.Component {
 			</Menu>
 		)
 	}
-
 	render() {
+		console.log(this.props)
 		return (
 			<header>
 				<div className="nav-content">
@@ -308,4 +308,8 @@ class MyHeader extends React.Component {
 	// }
 }
 
-export default MyHeader
+// const mapStateToProps = (state) => {
+
+//  }
+
+export default connect()(MyHeader)

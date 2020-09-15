@@ -1,21 +1,22 @@
 import React from "react"
 import { Menu } from "antd"
-import "./MySider.less"
-import { Link } from "react-router-dom"
-
 import arrayToTree from "array-to-tree"
-// import axios from "axios"
+import { Link } from "react-router-dom"
+import { connect } from "react-redux"
+
+import "./MySider.less"
 import { getMenuList } from "../../apis/api"
-// import NProgress from "nprogress"
+import { reqGetCodeListAction } from "../../store/actions/actions"
 
 import {
 	// 	// 	AppstoreOutlined,
 	// PieChartOutlined,
-	PlusOutlined,
+	GithubOutlined,
 	// 	// 	DesktopOutlined,
 	ContainerOutlined,
 	MailOutlined,
 	FieldBinaryOutlined,
+	ReadOutlined,
 } from "@ant-design/icons"
 
 // import { react } from "react.eval"
@@ -41,8 +42,8 @@ class MySider extends React.Component {
 	}
 
 	matchMap = new Map([
-		["<PlusOutlined />", <PlusOutlined />],
-		["<FieldBinaryOutlined />", <FieldBinaryOutlined />],
+		["<GithubOutlined />", <GithubOutlined />],
+		["<ReadOutlined />", <ReadOutlined />],
 	])
 
 	onOpenChange = (openKeys) => {
@@ -59,7 +60,7 @@ class MySider extends React.Component {
 	}
 
 	bindClick = (e) => {
-		// react("MyCode.getCode", e.key)
+		this.props.dispatch(reqGetCodeListAction(e.key))
 	}
 
 	menuList = (obj) => {
@@ -87,7 +88,8 @@ class MySider extends React.Component {
 						} else {
 							return (
 								<Menu.Item key={item.id} icon={<ContainerOutlined />}>
-									<Link to="/container/">{item.name}</Link>
+									{/* <Link to="/container/">{item.name}</Link> */}
+									{item.name}
 								</Menu.Item>
 							)
 						}
@@ -101,7 +103,7 @@ class MySider extends React.Component {
 		return (
 			<div className="sider-container">
 				<Menu
-					defaultSelectedKeys={["3123123123"]}
+					defaultSelectedKeys={["10"]}
 					defaultOpenKeys={["1"]}
 					onOpenChange={this.onOpenChange}
 					mode="inline"
@@ -145,4 +147,4 @@ class MySider extends React.Component {
 	}
 }
 
-export default MySider
+export default connect()(MySider)

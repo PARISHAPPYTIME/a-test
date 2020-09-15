@@ -1,20 +1,29 @@
-import { testRedux } from "../../apis/api"
+import { getGitHubList, getCodeList, getCode } from "../../apis/api"
 
-export const loadPostsAction = async (dispatch) => {
-	// testRedux
-	const res = await testRedux()
-	console.log(res)
+export const reqGetGitHubListAction = async (dispatch) => {
+	const res = await getGitHubList()
 	dispatch({
-		type: "LOAD_POST",
+		type: "REQ_GET_GITHUB_LIST_ACTION",
 		payload: res.data,
 	})
 }
 
-export const countAddAction = {
-	type: 'COUNT_ADD',
+export const reqGetCodeListAction = () => {
+	return async (dispatch) => {
+		const res = await getCodeList()
+		dispatch({
+			type: "REQ_GET_CODE_LIST_ACTION",
+			payload: res.data.data,
+		})
+	}
 }
 
-export const countReduceAction = {
-	type: 'COUNT_REDUCE'
+export const reqGetCodeAction = (id) => {
+	return async (dispatch) => {
+		const res = await getCode(id)
+		dispatch({
+			type: "REQ_GET_CODE_ACTION",
+			payload: res.data,
+		})
+	}
 }
-

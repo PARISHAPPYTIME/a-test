@@ -8,7 +8,7 @@ import MyTable from "./components/table/MyTable"
 import MyDescriptions from "./components/descriptions/MyDescriptions"
 
 // import MyPageHeader from './components/pageHeader/MyPageHeader.js'
-import PageList from "./views/list"
+import PageList from "./views/list/list"
 import PageLogin from "./views/user/index"
 
 import "./App.less"
@@ -43,8 +43,8 @@ function App() {
 								<Route path="/">
 									<PageList />
 								</Route>
-								<Route path="/descriptions" component={MyDescriptions}></Route>
-								<Route path="/list" component={MyTable}></Route>
+								{/* <Route path="/descriptions" component={MyDescriptions}></Route>
+								<Route path="/list" component={MyTable}></Route> */}
 							</div>
 						</div>
 					</Route>

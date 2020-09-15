@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import React from "react"
 import Highlight from "react-highlight"
 // import './index.less'
 import { Button, message, Divider, Avatar, Empty, List } from "antd"
@@ -6,29 +6,14 @@ import { CopyOutlined } from "@ant-design/icons"
 
 import copy from "copy-to-clipboard"
 
-// import { react } from "react.eval"
-import { getCode, getGitHubList } from "../../apis/api"
-import MyList from "./github-list"
+import { reqGetCodeListAction } from "../../store/actions/actions"
+import { connect } from "react-redux"
 
-function CodeList() {
-	let [listData, setListData] = useState([])
-
-	useEffect(function afterRender() {
-		getCode(20).then((res) => {
-			if (res.data.data) {
-				console.log(res)
-				setListData([
-					{
-						content: res.data.data,
-						title: res.data.other[0].name,
-						language: res.data.other[0].type,
-					},
-				])
-			}
-		})
-	}, [])
-
-	let copyInput = React.createRef()
+class CodeList extends React.Component {
+	componentDidMount() {
+		this.props.dispatch(reqGetCodeListAction()) //加载数据
+	}
+	copyInput = React.createRef()
 	//   state = {
 	//     language: 'javascript',
 	//     content: '',
@@ -50,123 +35,82 @@ function CodeList() {
 
 	//   render() {
 
-	// getCode = (id) => {
-	// getCode(id).then((res) => {
-	//   if (res.data.data) {
-	//     this.setState({
-	//       content: res.data.data,
-	//       language: res.data.other[0].type,
-	//     })
-	//   }
-
-	//   if (res.data.type === 'img') {
-	//     console.log(res.data.imgUrl)
-	//     this.setState({
-	//       content: res.data.imgUrl,
-	//       imgUrl: res.data.imgUrl,
-	//       language: 'img',
-	//     })
-	//   }
-	// })
-	//   }
-
-	//   getList = () => {
-	// getGitHubList().then((res) => {
-	//   console.log(res)
-	//   this.setState({
-	//     list: res.data.items,
-	//   })
-	// })
-	//   }
-
-	//   componentDidMount() {
-	// this.getCode()
-	// this.getList()
-	//   }
-	return (
-		<div className="app-code">
-			<List
-				itemLayout="vertical"
-				size="large"
-				pagination={{
-					onChange: (page) => {
-						console.log(page)
-					},
-					pageSize: 2,
-				}}
-				dataSource={listData}
-				renderItem={(item) => (
-					<List.Item key={item.title}>
-						<List.Item.Meta
-							avatar={<Avatar src={item.avatar} />}
-							title={<a href={item.href}>{item.title}</a>}
-							description={item.description}
-						/>
-						<Highlight className={item.language} ref={copyInput}>
-							{item.content}
-						</Highlight>
-					</List.Item>
-				)}
-			/>
-
-			{/* {!!this.state.content ? (
-          <div>
-            <div className="code-controls-box">
-              <Avatar
-                style={{ backgroundColor: '#ffbf00', verticalAlign: 'middle' }}
-                size="large"
-                gap={4}
-              >
-                U
-              </Avatar>
-              <div className="kong"></div>
-              <Button type="link">
-                <CopyOutlined />
-                编辑
-              </Button>
-              <Divider type="vertical" />
-              <Button type="link" onClick={this.copy}>
-                <CopyOutlined />
-                复制
-              </Button>
-            </div>
-            {this.state.language === 'img' ? (
-              <div>
-                <img src={this.state.imgUrl} alt="图片" />
-              </div>
-            ) : (
-              <Highlight className={this.state.language} ref={this.copyInput}>
-                {this.state.content}
-              </Highlight>
-            )}
-          </div>
-        ) : (
-          <div>
-            <Empty
-              image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
-              imageStyle={{
-                height: 60,
-              }}
-              description={
-                <span>
-                  Can't find more content you need <a href="#API">Why?</a>
-                </span>
-              }
-            >
-              <Button
-                type="primary"
-                onClick={() => {
-                  // react.eval('myHeader.setModal2Visible', true)
-                }}
-              >
-                Create Now
-              </Button>
-            </Empty>
-          </div>
-        )} */}
-		</div>
-	)
-	//   }
+	render() {
+		return (
+			<div className="app-code">
+				<Highlight
+					className={
+						this.props.contentOther
+							? this.props.contentOther.type
+							: "javascript"
+					}
+					ref={this.copyInput}
+				>
+					{this.props.content}
+				</Highlight>
+				{/* {!!this.props.content ? (
+					<div>
+						<div className="code-controls-box">
+							<Avatar
+								style={{ backgroundColor: "#ffbf00", verticalAlign: "middle" }}
+								size="large"
+								gap={4}
+							>
+								U
+							</Avatar>
+							<div className="kong"></div>
+							<Button type="link">
+								<CopyOutlined />
+								编辑
+							</Button>
+							<Divider type="vertical" />
+							<Button type="link" onClick={this.copy}>
+								<CopyOutlined />
+								复制
+							</Button>
+						</div>
+						{this.state.language === "img" ? (
+							<div>
+								<img src={this.state.imgUrl} alt="图片" />
+							</div>
+						) : (
+						)}
+					</div>
+				) : (
+					<div>
+						<Empty
+							image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
+							imageStyle={{
+								height: 60,
+							}}
+							description={
+								<span>
+									Can't find more content you need <a href="#API">Why?</a>
+								</span>
+							}
+						>
+							<Button
+								type="primary"
+								onClick={() => {
+									// react.eval('myHeader.setModal2Visible', true)
+								}}
+							>
+								Create Now
+							</Button>
+						</Empty>
+					</div>
+				)} */}
+			</div>
+		)
+	}
 }
 
-export default CodeList
+const mapStateProps = (state) => {
+	console.log("state", state)
+	return {
+		content: state.post.res.data,
+		contentOther: state.post.res.other && state.post.res.other[0],
+	}
+}
+
+export default connect(mapStateProps)(CodeList)
