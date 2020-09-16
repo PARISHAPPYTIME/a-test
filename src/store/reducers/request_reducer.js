@@ -25,7 +25,7 @@ let reducerMap = new Map([
 		(state, action) => {
 			return {
 				...state,
-				list: action.payload,
+				CodeList: action.payload,
 			}
 		},
 	],
@@ -34,7 +34,25 @@ let reducerMap = new Map([
 		(state, action) => {
 			return {
 				...state,
+				CodeContent: action.payload,
+			}
+		},
+	],
+	[
+		"SET_VISIBILITY_FILTER",
+		(state, action) => {
+			return {
+				...state,
 				res: action.payload,
+			}
+		},
+	],
+	[
+		"SET_LIST_TYPE",
+		(state, action) => {
+			return {
+				...state,
+				ListType: action.payload,
 			}
 		},
 	],
@@ -42,6 +60,9 @@ let reducerMap = new Map([
 
 const postReducer = (
 	state = {
+		CodeList: [],
+		CodeContent: "",
+		ListType: "localCode",
 		list: [],
 		res: {},
 	},

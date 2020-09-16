@@ -1,18 +1,17 @@
 import React from "react"
 import Highlight from "react-highlight"
-// import './index.less'
-import { Button, message, Divider, Avatar, Empty, List } from "antd"
-import { CopyOutlined } from "@ant-design/icons"
+import "./code-list.less"
+import { Button, Empty } from "antd"
+// import { CopyOutlined } from "@ant-design/icons"
 
-import copy from "copy-to-clipboard"
+// import copy from "copy-to-clipboard"
 
-import { reqGetCodeListAction } from "../../store/actions/actions"
 import { connect } from "react-redux"
 
 class CodeList extends React.Component {
-	componentDidMount() {
-		this.props.dispatch(reqGetCodeListAction()) //加载数据
-	}
+	// componentDidMount() {
+	// this.props.dispatch(reqGetCodeListAction()) //加载数据
+	// }
 	copyInput = React.createRef()
 	//   state = {
 	//     language: 'javascript',
@@ -38,16 +37,40 @@ class CodeList extends React.Component {
 	render() {
 		return (
 			<div className="app-code">
-				<Highlight
-					className={
-						this.props.contentOther
-							? this.props.contentOther.type
-							: "javascript"
-					}
-					ref={this.copyInput}
-				>
-					{this.props.content}
-				</Highlight>
+				{this.props.content ? (
+					<Highlight
+						className={
+							this.props.contentType
+								? this.props.contentType.type
+								: "javascript"
+						}
+						ref={this.copyInput}
+					>
+						{this.props.content}
+					</Highlight>
+				) : (
+					<Empty
+						image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
+						imageStyle={{
+							height: 60,
+						}}
+						description={
+							<span>
+								Can't find more content you need <a href="#API">Why?</a>
+							</span>
+						}
+					>
+						<Button
+							type="primary"
+							onClick={() => {
+								// react.eval('myHeader.setModal2Visible', true)
+							}}
+						>
+							Create Now
+						</Button>
+					</Empty>
+				)}
+
 				{/* {!!this.props.content ? (
 					<div>
 						<div className="code-controls-box">
@@ -78,26 +101,7 @@ class CodeList extends React.Component {
 					</div>
 				) : (
 					<div>
-						<Empty
-							image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
-							imageStyle={{
-								height: 60,
-							}}
-							description={
-								<span>
-									Can't find more content you need <a href="#API">Why?</a>
-								</span>
-							}
-						>
-							<Button
-								type="primary"
-								onClick={() => {
-									// react.eval('myHeader.setModal2Visible', true)
-								}}
-							>
-								Create Now
-							</Button>
-						</Empty>
+						
 					</div>
 				)} */}
 			</div>
@@ -106,10 +110,9 @@ class CodeList extends React.Component {
 }
 
 const mapStateProps = (state) => {
-	console.log("state", state)
 	return {
-		content: state.post.res.data,
-		contentOther: state.post.res.other && state.post.res.other[0],
+		content: state.data.CodeContent.data,
+		contentType: state.data.CodeContent && state.data.CodeContent.type,
 	}
 }
 

@@ -1,99 +1,131 @@
-import React from "react"
-// import { ref } from 'react.eval'
-
-// import GitHubList from "../../components/list/github-list"
-// import CodeList from "../../components/list/code-list"
+import React, { Fragment, useState } from "react"
+import CodeList from "../../components/list/code-list"
+import pop from "../../components/pop/pop"
 import "./list.less"
 
-import { Input, Radio, Button } from "antd"
+import { Modal, Button } from "antd"
+import { getCodeList, getCode } from "../../apis/api"
 
 import { connect } from "react-redux"
 
-import {
-	reqGetCodeListAction,
-	reqGetCodeAction,
-} from "../../store/actions/actions"
-
-// const matchMap = [
-//   ['github', GitHubList],
-//   ['myself', CodeList],
-//   ['music', null],
-// ]
-
-// let type = 'github'
-// console.log(wrapContext)
-// loadPostsAction(this.props.dispatch)
 class PageList extends React.Component {
-	// fn = matchMap.find((item) => {
-	//   return item[0] === type
-	// })[1]
-	// fn = (<div>qweqwe</div>)
-
+	constructor(props) {
+		super(props)
+		this.state = {
+			modal2Visible: false,
+		}
+		this.showPop = this.showPop.bind(this)
+	}
 	componentDidMount() {
-		console.log(1)
-		this.props.dispatch(reqGetCodeListAction())
-		// this.props.dispatch(reqGetCodeListAction())
+		this.props.PropsGetCodeList()
 	}
 
 	showPop = (e) => {
-		this.props.dispatch(reqGetCodeAction(e.id))
+		return (cb) => {
+			setTimeout(() => {
+				this.props.PropsGetCode(e.id, () => {
+					if (this.props.contentType === "img") {
+						console.log(this.props.content)
+						pop.info(this.props.content)
+						cb()
+					} else {
+						this.setState(
+							{
+								modal2Visible: true,
+							},
+							() => cb()
+						)
+					}
+				})
+			}, 500)
+		}
+	}
+
+	setModal2Visible(modal2Visible) {
+		this.setState({ modal2Visible })
 	}
 
 	render() {
-		console.log(this.props)
 		return (
-			<div className="app-list">
-				{/* <GitHubList /> */}
-				{/* <CodeList /> */}
-				{this.props.list.map((item) => {
-					return (
-						<Button
-							onClick={() => {
-								this.showPop(item)
-							}}
-							key={item.id}
-							type={item.type}
-							shape="round"
-							type="primary"
-						>
-							{item.name}
-						</Button>
-					)
-				})}
-			</div>
+			<Fragment>
+				<div className="app-list">
+					{this.props.CodeList &&
+						this.props.CodeList.map((item) => {
+							return (
+								<ClickButton
+									key={item.id}
+									item={item}
+									bindClick={this.showPop(item)}
+								/>
+							)
+						})}
+				</div>
+
+				<Modal
+					title="Vertically centered modal dialog"
+					width={800}
+					centered
+					visible={this.state.modal2Visible}
+					onOk={() => this.setModal2Visible(false)}
+					onCancel={() => this.setModal2Visible(false)}
+				>
+					<CodeList />
+				</Modal>
+			</Fragment>
 		)
 	}
 }
 
 const mapStateToProps = (state) => {
-	console.log("state", state)
 	return {
-		list: state.post.list,
+		CodeList: state.data.CodeList && state.data.CodeList.data,
+		contentType: state.data.CodeContent && state.data.CodeContent.type,
+		content: state.data.CodeContent.data,
 	}
 }
 
-// const mapDispatchToProps = (dispatch, ownProps) => {
-// 	return {
-// 		// increment:
-// 	}
-// }
+const mapDispatchToProps = (dispatch, ownProps) => {
+	return {
+		PropsGetCodeList: async () => {
+			const res = await getCodeList()
+			dispatch({
+				type: "REQ_GET_CODE_LIST_ACTION",
+				payload: res.data,
+			})
+		},
+		PropsGetCode: async (id, cb) => {
+			const res = await getCode(id)
+			dispatch({
+				type: "REQ_GET_CODE_ACTION",
+				payload: res.data,
+			})
+			cb()
+		},
+	}
+}
 
-export default connect(mapStateToProps)(PageList)
-// function RadioGroup() {
-//   console.log('犯法迪奥itong')
-//   return (
-//     <Radio.Group
-//       defaultValue="github"
-//       buttonStyle="solid"
-//       style={{ marginTop: 16 }}
-//     >
-//       {matchMap.map((item) => {
-//         return (
-//           <Radio.Button value={item[0]} key={item[0]}>
-//             {item[0]}
-//           </Radio.Button>
-//         )
-//       })}
-//     </Radio.Group>
-//   )
-// }
+export default connect(mapStateToProps, mapDispatchToProps)(PageList)
+
+function ClickButton(props) {
+	const [loading, setLoading] = useState(false)
+	let { item, bindClick } = props
+
+	let myButton = () => {
+		setLoading(!loading)
+		bindClick(() => {
+			setLoading(false)
+		})
+	}
+
+	return (
+		<Button
+			onClick={myButton}
+			className="app-list-item"
+			type={item.type}
+			loading={loading}
+			shape="round"
+		>
+			{item.name}
+		</Button>
+	)
+}

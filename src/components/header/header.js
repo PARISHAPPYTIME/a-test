@@ -2,7 +2,10 @@ import React from "react"
 import cookie from "react-cookies"
 import { connect } from "react-redux"
 
-import { reqGetGitHubListAction } from "../../store/actions/actions"
+// import {
+// 	reqGetGitHubListAction,
+// 	reqGetCodeListAction,
+// } from "../../store/actions/actions"
 
 import {
 	Button,
@@ -50,7 +53,7 @@ const props = {
 		}
 	},
 }
-console.log(cookie.load("userInfo"))
+// console.log(cookie.load("userInfo"))
 class MyHeader extends React.Component {
 	state = {
 		language: "javascript",
@@ -76,6 +79,8 @@ class MyHeader extends React.Component {
 			type: this.state.type,
 		}).then((res) => {
 			this.setModal2Visible(false)
+
+			// this.props.dispatch(reqGetCodeListAction())
 			message.success("复制成功，如果失败，请在输入框内手动复制.")
 			// react.eval("MySider.getMenuList")
 		})
@@ -129,8 +134,7 @@ class MyHeader extends React.Component {
 	)
 
 	bindSearchFn = (e) => {
-		this.props.dispatch(reqGetGitHubListAction)
-		// console.log(1)
+		// this.props.dispatch(reqGetGitHubListAction)
 		// react.eval("MyList.change")
 	}
 
@@ -168,7 +172,6 @@ class MyHeader extends React.Component {
 		)
 	}
 	render() {
-		console.log(this.props)
 		return (
 			<header>
 				<div className="nav-content">
@@ -303,7 +306,6 @@ class MyHeader extends React.Component {
 	}
 
 	// componentWillUnmount() {
-	// console.log(cookie.load('userInfo'))
 	// cookie.save('userInfo', res.data)
 	// }
 }

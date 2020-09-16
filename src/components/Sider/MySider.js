@@ -6,20 +6,16 @@ import { connect } from "react-redux"
 
 import "./MySider.less"
 import { getMenuList } from "../../apis/api"
-import { reqGetCodeListAction } from "../../store/actions/actions"
+// import { setListType } from "../../store/actions/actions"
 
 import {
-	// 	// 	AppstoreOutlined,
-	// PieChartOutlined,
 	GithubOutlined,
-	// 	// 	DesktopOutlined,
 	ContainerOutlined,
 	MailOutlined,
-	FieldBinaryOutlined,
+	AlignLeftOutlined,
 	ReadOutlined,
 } from "@ant-design/icons"
 
-// import { react } from "react.eval"
 const { SubMenu } = Menu
 
 class MySider extends React.Component {
@@ -29,6 +25,7 @@ class MySider extends React.Component {
 		collapsed: false,
 		list: [],
 	}
+
 	changeMode = (value) => {
 		this.setState({
 			mode: value ? "vertical" : "inline",
@@ -44,6 +41,7 @@ class MySider extends React.Component {
 	matchMap = new Map([
 		["<GithubOutlined />", <GithubOutlined />],
 		["<ReadOutlined />", <ReadOutlined />],
+		["<AlignLeftOutlined />", <AlignLeftOutlined />],
 	])
 
 	onOpenChange = (openKeys) => {
@@ -60,7 +58,7 @@ class MySider extends React.Component {
 	}
 
 	bindClick = (e) => {
-		this.props.dispatch(reqGetCodeListAction(e.key))
+		this.props.PropsSetListType(e.key)
 	}
 
 	menuList = (obj) => {
@@ -88,7 +86,6 @@ class MySider extends React.Component {
 						} else {
 							return (
 								<Menu.Item key={item.id} icon={<ContainerOutlined />}>
-									{/* <Link to="/container/">{item.name}</Link> */}
 									{item.name}
 								</Menu.Item>
 							)
@@ -103,7 +100,7 @@ class MySider extends React.Component {
 		return (
 			<div className="sider-container">
 				<Menu
-					defaultSelectedKeys={["10"]}
+					defaultSelectedKeys={["localCode"]}
 					defaultOpenKeys={["1"]}
 					onOpenChange={this.onOpenChange}
 					mode="inline"
@@ -147,4 +144,22 @@ class MySider extends React.Component {
 	}
 }
 
-export default connect()(MySider)
+const mapStateToProps = (state) => {
+	return {
+		type: state.type,
+	}
+}
+
+const mapDispatchToProps = (dispatch, ownProps) => {
+	return {
+		PropsSetListType: async (type) => {
+			console.log("type", type)
+			dispatch({
+				type: "SET_LIST_TYPE",
+				payload: type,
+			})
+		},
+	}
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(MySider)

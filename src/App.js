@@ -4,8 +4,8 @@ import Scrollbars from "react-custom-scrollbars"
 import { BrowserRouter as Router, Route } from "react-router-dom"
 
 import MyHeader from "./components/header/header"
-import MyTable from "./components/table/MyTable"
-import MyDescriptions from "./components/descriptions/MyDescriptions"
+// import MyTable from "./components/table/MyTable"
+// import MyDescriptions from "./components/descriptions/MyDescriptions"
 
 // import MyPageHeader from './components/pageHeader/MyPageHeader.js'
 import PageList from "./views/list/list"
@@ -26,32 +26,38 @@ function App() {
 	}
 
 	return (
-		<div className="App">
-			<MyHeader id="myHeader" />
-			<main>
-				<Router>
-					<Route path="/container">
-						<Scrollbars
-							style={{ height: "100vh", width: 286 }} //这里给个足够高的高度就好
-							renderThumbVertical={renderThumb} //传入函数，设置滚动条样式
-							autoHide
-						>
-							<Sider id="MySider" />
-						</Scrollbars>
-						<div className="app-container">
-							<div className="p-24">
-								<Route path="/">
-									<PageList />
-								</Route>
-								{/* <Route path="/descriptions" component={MyDescriptions}></Route>
+		<Scrollbars
+			style={{ height: "100vh" }} //这里给个足够高的高度就好
+			renderThumbVertical={renderThumb} //传入函数，设置滚动条样式
+			autoHide
+		>
+			<div className="App">
+				<MyHeader id="myHeader" />
+				<main>
+					<Router>
+						<Route path="/container">
+							<Scrollbars
+								style={{ height: "100vh", width: 286 }} //这里给个足够高的高度就好
+								renderThumbVertical={renderThumb} //传入函数，设置滚动条样式
+								autoHide
+							>
+								<Sider id="MySider" />
+							</Scrollbars>
+							<div className="app-container">
+								<div className="p-24">
+									<Route path="/">
+										<PageList />
+									</Route>
+									{/* <Route path="/descriptions" component={MyDescriptions}></Route>
 								<Route path="/list" component={MyTable}></Route> */}
+								</div>
 							</div>
-						</div>
-					</Route>
-					<Route path="/personal-center" component={PageLogin}></Route>
-				</Router>
-			</main>
-		</div>
+						</Route>
+						<Route path="/personal-center" component={PageLogin}></Route>
+					</Router>
+				</main>
+			</div>
+		</Scrollbars>
 	)
 }
 
