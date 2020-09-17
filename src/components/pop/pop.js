@@ -12,7 +12,7 @@ function info(imgPath) {
 		),
 		centered: true,
 		onOk() {
-			console.log(123123)
+			// console.log(123123)
 		},
 	})
 }

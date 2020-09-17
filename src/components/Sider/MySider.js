@@ -146,14 +146,13 @@ class MySider extends React.Component {
 
 const mapStateToProps = (state) => {
 	return {
-		type: state.type,
+		ListType: state.data.ListType,
 	}
 }
 
 const mapDispatchToProps = (dispatch, ownProps) => {
 	return {
 		PropsSetListType: async (type) => {
-			console.log("type", type)
 			dispatch({
 				type: "SET_LIST_TYPE",
 				payload: type,

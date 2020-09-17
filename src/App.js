@@ -32,7 +32,7 @@ function App() {
 			autoHide
 		>
 			<div className="App">
-				<MyHeader id="myHeader" />
+				<MyHeader />
 				<main>
 					<Router>
 						<Route path="/container">

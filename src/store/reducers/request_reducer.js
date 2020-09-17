@@ -16,7 +16,7 @@ let reducerMap = new Map([
 			})
 			return {
 				...state,
-				list: newArr,
+				GitHubList: newArr,
 			}
 		},
 	],
@@ -63,7 +63,7 @@ const postReducer = (
 		CodeList: [],
 		CodeContent: "",
 		ListType: "localCode",
-		list: [],
+		GitHubList: [],
 		res: {},
 	},
 	action

@@ -3,9 +3,7 @@ import { List, Avatar, Space } from "antd"
 import { BranchesOutlined, StarOutlined, EyeOutlined } from "@ant-design/icons"
 
 import { connect } from "react-redux"
-import { reqGetGitHubListAction } from "../../store/actions/actions"
-
-// import { getGitHubList } from "../../apis/api"
+import { getGitHubList } from "../../apis/api"
 
 let IconText = ({ icon, text }) => (
 	<Space>
@@ -16,7 +14,8 @@ let IconText = ({ icon, text }) => (
 
 class GitHubList extends React.Component {
 	componentDidMount() {
-		this.props.dispatch(reqGetGitHubListAction) //加载数据
+		console.log(this.props, 5)
+		this.props.PropsGetGitHubList(this.props.searchKey)
 	}
 	render() {
 		return (
@@ -29,7 +28,7 @@ class GitHubList extends React.Component {
 					},
 					pageSize: 5,
 				}}
-				dataSource={this.props.post.list}
+				dataSource={this.props.GitHubList}
 				footer={
 					<div>
 						<b>数据来源由 GitHub 提供</b>
@@ -78,16 +77,21 @@ class GitHubList extends React.Component {
 
 const mapStateProps = (state) => {
 	return {
-		post: state.post,
+		GitHubList: state.data.GitHubList,
 	}
 }
 
-// const mapDispatchToProps = (() => {
-// 	return {
-// 		dispatch: () => {
-// 			dispatch(action)
-// 		}
-// 	}
-// })
+const mapDispatchToProps = (dispatch, ownProps) => {
+	return {
+		PropsGetGitHubList: async (key) => {
+			console.log(key, "key")
+			const res = await getGitHubList(key)
+			dispatch({
+				type: "REQ_GET_GITHUB_LIST_ACTION",
+				payload: res.data,
+			})
+		},
+	}
+}
 
-export default connect(mapStateProps)(GitHubList)
+export default connect(mapStateProps, mapDispatchToProps)(GitHubList)

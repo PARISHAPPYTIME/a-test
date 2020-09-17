@@ -1,109 +1,68 @@
-import React from "react"
-import Highlight from "react-highlight"
-import "./code-list.less"
-import { Button, Empty } from "antd"
+import React, { useState } from "react"
+import { Button } from "antd"
+import pop from "../../components/pop/pop"
+
+import PopCode from "../../components/pop/PopCode"
 // import { CopyOutlined } from "@ant-design/icons"
 
-// import copy from "copy-to-clipboard"
-
 import { connect } from "react-redux"
+import { getCodeList, getCode } from "../../apis/api"
 
 class CodeList extends React.Component {
-	// componentDidMount() {
-	// this.props.dispatch(reqGetCodeListAction()) //加载数据
-	// }
-	copyInput = React.createRef()
-	//   state = {
-	//     language: 'javascript',
-	//     content: '',
-	//     type: 'type',
-	//     imgUrl: '',
-	//     list: [], // github列表参数
-	//   }
+	constructor(props) {
+		super(props)
+		this.showPop = this.showPop.bind(this)
+		this.closePop = this.closePop.bind(this)
+		this.state = {
+			PopCodeVisible: false,
+		}
+	}
 
-	//   constructor(props) {
-	//     super(props)
-	//     react.init(this)
-	//   }
+	showPop = (e) => {
+		return (cb) => {
+			setTimeout(() => {
+				this.props.PropsGetCode(e.id, () => {
+					if (
+						this.props.contentType === "img" ||
+						this.props.contentType === "Img"
+					) {
+						pop.info(this.props.content)
+						cb()
+					} else {
+						this.closePop(true, () => cb())
+					}
+				})
+			}, 500)
+		}
+	}
 
-	//   copy = () => {
-	//     // 粘贴输入框中的内容
-	//     copy(this.state.content)
-	//     message.success('复制成功，如果失败，请在输入框内手动复制.')
-	//   }
+	closePop(PopCodeVisible, cb) {
+		this.setState({ PopCodeVisible }, cb)
+	}
 
-	//   render() {
+	componentDidMount() {
+		this.props.PropsGetCodeList()
+	}
 
 	render() {
 		return (
 			<div className="app-code">
-				{this.props.content ? (
-					<Highlight
-						className={
-							this.props.contentType
-								? this.props.contentType.type
-								: "javascript"
-						}
-						ref={this.copyInput}
-					>
-						{this.props.content}
-					</Highlight>
-				) : (
-					<Empty
-						image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
-						imageStyle={{
-							height: 60,
-						}}
-						description={
-							<span>
-								Can't find more content you need <a href="#API">Why?</a>
-							</span>
-						}
-					>
-						<Button
-							type="primary"
-							onClick={() => {
-								// react.eval('myHeader.setModal2Visible', true)
-							}}
-						>
-							Create Now
-						</Button>
-					</Empty>
-				)}
+				{this.props.CodeList &&
+					this.props.CodeList.map((item) => {
+						return (
+							<ClickButton
+								key={item.id}
+								item={item}
+								bindClick={this.showPop(item)}
+							/>
+						)
+					})}
 
-				{/* {!!this.props.content ? (
-					<div>
-						<div className="code-controls-box">
-							<Avatar
-								style={{ backgroundColor: "#ffbf00", verticalAlign: "middle" }}
-								size="large"
-								gap={4}
-							>
-								U
-							</Avatar>
-							<div className="kong"></div>
-							<Button type="link">
-								<CopyOutlined />
-								编辑
-							</Button>
-							<Divider type="vertical" />
-							<Button type="link" onClick={this.copy}>
-								<CopyOutlined />
-								复制
-							</Button>
-						</div>
-						{this.state.language === "img" ? (
-							<div>
-								<img src={this.state.imgUrl} alt="图片" />
-							</div>
-						) : (
-						)}
-					</div>
-				) : (
-					<div>
-						
-					</div>
-				)} */}
+				<PopCode
+					PopCodeVisible={this.state.PopCodeVisible}
+					closePop={this.closePop}
+					content={this.props.content}
+				/>
 			</div>
 		)
 	}
@@ -111,9 +70,53 @@ class CodeList extends React.Component {
 
 const mapStateProps = (state) => {
 	return {
-		content: state.data.CodeContent.data,
+		CodeList: state.data.CodeList && state.data.CodeList.data,
 		contentType: state.data.CodeContent && state.data.CodeContent.type,
+		content: state.data.CodeContent.data,
 	}
 }
 
-export default connect(mapStateProps)(CodeList)
+const mapDispatchToProps = (dispatch, ownProps) => {
+	return {
+		PropsGetCodeList: async () => {
+			const res = await getCodeList()
+			dispatch({
+				type: "REQ_GET_CODE_LIST_ACTION",
+				payload: res.data,
+			})
+		},
+		PropsGetCode: async (id, cb) => {
+			const res = await getCode(id)
+			dispatch({
+				type: "REQ_GET_CODE_ACTION",
+				payload: res.data,
+			})
+			cb()
+		},
+	}
+}
+
+export default connect(mapStateProps, mapDispatchToProps)(CodeList)
+
+function ClickButton(props) {
+	const [loading, setLoading] = useState(false)
+	let { item, bindClick } = props
+
+	let myButton = () => {
+		setLoading(!loading)
+		bindClick(() => {
+			setLoading(false)
+		})
+	}
+
+	return (
+		<Button
+			onClick={myButton}
+			className="app-list-item"
+			type="primary"
+			loading={loading}
+		>
+			{item.name}
+		</Button>
+	)
+}
