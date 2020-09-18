@@ -32,12 +32,19 @@ function App() {
 			autoHide
 		>
 			<div className="App">
+				{/* <video
+					id="liveBgBox"
+					autoPlay={true}
+					loop={true}
+					muted={true}
+					src="https://cdn.jsdelivr.net/gh/MobiusBeta/assets/videos/Live_Wallpaper_2.mp4"
+				></video> */}
 				<MyHeader />
 				<main>
 					<Router>
 						<Route path="/container">
 							<Scrollbars
-								style={{ height: "100vh", width: 286 }} //这里给个足够高的高度就好
+								style={{ height: "auto", width: 286 }} //这里给个足够高的高度就好
 								renderThumbVertical={renderThumb} //传入函数，设置滚动条样式
 								autoHide
 							>

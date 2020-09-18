@@ -37,30 +37,13 @@ class SaveCodeForm extends Component {
 		try {
 			const values = await this.formRef.current.validateFields()
 			values.fileid = fileid
-			values.type = values.type.join(',')
+			values.type = values.type.join(",")
 			uploadFile(values).then((res) => {
 				message.success("标签插入成功！")
 			})
 		} catch (errorInfo) {
 			console.log("Failed:", errorInfo)
 		}
-		// this.formRef.current.validateFields(
-		// 	[
-		// 		"name",
-		// 		(err, value) => {
-		// 			console.lof(err, value)
-		// 			console.log(2)
-		// 		},
-		// 	],
-		// 	[
-		// 		"checkbox-group",
-		// 		(err, value) => {
-		// 			console.lof(err, value)
-		// 			console.log(3)
-		// 		},
-		// 	]
-		// )
-		// this.formRef
 	}
 
 	componentDidMount() {

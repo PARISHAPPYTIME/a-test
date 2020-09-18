@@ -1,12 +1,13 @@
 import React, { useState } from "react"
-import { Button } from "antd"
-import pop from "../../components/pop/pop"
-
-import PopCode from "../../components/pop/PopCode"
-// import { CopyOutlined } from "@ant-design/icons"
-
+import { Button, Divider } from "antd"
+import { PlusOutlined } from "@ant-design/icons"
 import { connect } from "react-redux"
+
+import pop from "../../components/pop/pop"
+import PopCode from "../../components/pop/PopCode"
 import { getCodeList, getCode } from "../../apis/api"
+
+import SaveCodeForm from "../form/SaveCodeForm"
 
 class CodeList extends React.Component {
 	constructor(props) {
@@ -44,9 +45,14 @@ class CodeList extends React.Component {
 		this.props.PropsGetCodeList()
 	}
 
+	onRef = (ref) => {
+		this.ChildSaveCodeForm = ref
+	}
+
 	render() {
 		return (
 			<div className="app-code">
+				<Divider orientation="left">Node</Divider>
 				{this.props.CodeList &&
 					this.props.CodeList.map((item) => {
 						return (
@@ -57,12 +63,37 @@ class CodeList extends React.Component {
 							/>
 						)
 					})}
+				<Button
+					icon={<PlusOutlined />}
+					onClick={() => this.ChildSaveCodeForm.setModal2Visible(true)}
+				>
+					添加标签
+				</Button>
+				<Divider orientation="left">Javascript</Divider>
+				{this.props.CodeList &&
+					this.props.CodeList.map((item) => {
+						return (
+							<ClickButton
+								key={item.id}
+								item={item}
+								bindClick={this.showPop(item)}
+							/>
+						)
+					})}
+				<Button
+					icon={<PlusOutlined />}
+					onClick={() => this.ChildSaveCodeForm.setModal2Visible(true)}
+				>
+					添加标签
+				</Button>
 
 				<PopCode
 					PopCodeVisible={this.state.PopCodeVisible}
 					closePop={this.closePop}
 					content={this.props.content}
 				/>
+
+				<SaveCodeForm onRef={this.onRef} />
 			</div>
 		)
 	}

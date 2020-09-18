@@ -2,11 +2,11 @@ import React from "react"
 import cookie from "react-cookies"
 import { connect } from "react-redux"
 
-import SaveCodeForm from "../../components/form/SaveCodeForm"
+import { Button, message, Dropdown, Menu } from "antd"
+import { githubLogin } from "../../apis/api"
+import urlParser from "../../utils/urlParser"
 
-import { Button, Divider, Dropdown, Menu } from "antd"
 import {
-	FormOutlined,
 	LogoutOutlined,
 	DeploymentUnitOutlined,
 	GithubOutlined,
@@ -17,12 +17,37 @@ import {
 // console.log(cookie.load("userInfo"))
 class MyHeader extends React.Component {
 	state = {
-		cookie: cookie.load("userInfo"),
+		cookie: null,
 	}
 
 	LinkToGitHub = () => {
 		window.location.href =
 			"https://github.com/login/oauth/authorize?client_id=4becd600482e091af2b4&redirect_uri=http://localhost:3001/container"
+	}
+
+	componentDidMount() {
+		let userInfo = cookie.load("userInfo")
+		if (userInfo && userInfo.data.name) {
+			this.setState({
+				cookie: cookie.load("userInfo"),
+			})
+		} else {
+			var myurl = urlParser()
+			if (myurl.data("code")) {
+				githubLogin(myurl.data("code")).then((res) => {
+					console.log(res)
+					if (res.data.status === 100 && res.data.data.name) {
+						message.success(`${res.data.data.name} 登陆成功.`)
+						cookie.save("userInfo", res.data)
+						this.setState({
+							cookie: cookie.load("userInfo"),
+						})
+					} else {
+						message.error(`${res.data.msg}`)
+					}
+				})
+			}
+		}
 	}
 
 	menu = (
@@ -40,23 +65,11 @@ class MyHeader extends React.Component {
 		</Menu>
 	)
 
-	onRef = (ref) => {
-		this.ChildSaveCodeForm = ref
-	}
-
 	render() {
+		console.log(cookie.load("userInfo"))
 		return (
 			<header>
 				<div className="nav-content">
-					<Button
-						type="primary"
-						shape="round"
-						icon={<FormOutlined />}
-						onClick={() => this.ChildSaveCodeForm.setModal2Visible(true)}
-					>
-						添加代码片段
-					</Button>
-					<Divider type="vertical" />
 					{this.state.cookie && this.state.cookie.data.name ? (
 						<Dropdown overlay={this.menu} trigger={["click"]}>
 							<Button
@@ -82,8 +95,6 @@ class MyHeader extends React.Component {
 						</Button>
 					)}
 				</div>
-
-				<SaveCodeForm onRef={this.onRef} />
 			</header>
 		)
 	}
